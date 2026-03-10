@@ -1,0 +1,53 @@
+[
+  {
+    "filiere": "Informatique",
+    "icon": "computer",
+    "interets": ["Informatique", "Maths", "Sciences"],
+    "metiers": [
+      {
+        "titre": "Développeur",
+        "description": "Conçoit et développe des applications web et mobiles.",
+        "niveau": "Bac+3"
+      },
+      {
+        "titre": "Data Analyst",
+        "description": "Analyse et interprète les données pour aider à la décision.",
+        "niveau": "Bac+3"
+      }
+    ]
+  },
+  {
+    "filiere": "Sciences",
+    "icon": "science",
+    "interets": ["Sciences", "Maths", "Santé"],
+    "metiers": [
+      {
+        "titre": "Chercheur",
+        "description": "Travaille sur des projets de recherche scientifique.",
+        "niveau": "Bac+5"
+      },
+      {
+        "titre": "Ingénieur biomédical",
+        "description": "Conçoit des équipements médicaux innovants.",
+        "niveau": "Bac+5"
+      }
+    ]
+  },
+  {
+    "filiere": "Arts",
+    "icon": "palette",
+    "interets": ["Arts", "Design", "Communication"],
+    "metiers": [
+      {
+        "titre": "Designer Graphique",
+        "description": "Crée des visuels, identités de marque et interfaces.",
+        "niveau": "Bac+3"
+      },
+      {
+        "titre": "Directeur artistique",
+        "description": "Pilote la vision créative de projets visuels.",
+        "niveau": "Bac+5"
+      }
+    ]
+  }
+]
