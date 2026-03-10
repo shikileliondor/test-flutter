@@ -1,52 +1,130 @@
 [
   {
-    "filiere": "Informatique",
-    "icon": "computer",
-    "interets": ["Informatique", "Maths", "Sciences"],
-    "metiers": [
+    "nom": "Développeur Web",
+    "niveau": "Bac+3 à Bac+5",
+    "icone": "computer",
+    "description": "Le développeur web conçoit et maintient des sites et applications web. Il transforme les besoins utilisateurs en interfaces fluides, performantes et accessibles.",
+    "competences": ["HTML/CSS", "JavaScript", "UI/UX", "Git", "Travail d'équipe"],
+    "taille_metier": "Très forte demande en Europe",
+    "roadmap": [
       {
-        "titre": "Développeur",
-        "description": "Conçoit et développe des applications web et mobiles.",
-        "niveau": "Bac+3"
+        "titre": "Bases du web",
+        "duree": "3 à 6 mois",
+        "details": "Apprendre HTML, CSS, JavaScript et les principes du responsive design.",
+        "couleur": "blue",
+        "icone": "menu_book"
       },
       {
-        "titre": "Data Analyst",
-        "description": "Analyse et interprète les données pour aider à la décision.",
-        "niveau": "Bac+3"
+        "titre": "Projets pratiques",
+        "duree": "6 à 12 mois",
+        "details": "Créer un portfolio avec des projets front-end et back-end simples.",
+        "couleur": "orange",
+        "icone": "work"
+      },
+      {
+        "titre": "Spécialisation",
+        "duree": "12 à 24 mois",
+        "details": "Approfondir avec React, Flutter Web ou Node.js et les bonnes pratiques de déploiement.",
+        "couleur": "green",
+        "icone": "school"
+      }
+    ],
+    "ecoles": [
+      {
+        "nom": "42 Paris",
+        "ville": "Paris",
+        "formations": ["Développement logiciel", "Architecture web"]
+      },
+      {
+        "nom": "Le Wagon",
+        "ville": "Lyon",
+        "formations": ["Web Development", "Product & UX"]
       }
     ]
   },
   {
-    "filiere": "Sciences",
-    "icon": "science",
-    "interets": ["Sciences", "Maths", "Santé"],
-    "metiers": [
+    "nom": "Médecin",
+    "niveau": "Bac+9 et plus",
+    "icone": "medical_services",
+    "description": "Le médecin diagnostique, traite et accompagne les patients. Le métier combine expertise scientifique, sens humain et grande rigueur.",
+    "competences": ["Biologie", "Empathie", "Analyse clinique", "Communication", "Éthique"],
+    "taille_metier": "Besoin structurel dans toutes les régions",
+    "roadmap": [
       {
-        "titre": "Chercheur",
-        "description": "Travaille sur des projets de recherche scientifique.",
-        "niveau": "Bac+5"
+        "titre": "Cycle pré-clinique",
+        "duree": "2 à 3 ans",
+        "details": "Maîtriser les fondamentaux scientifiques et réussir les examens de passage.",
+        "couleur": "blue",
+        "icone": "menu_book"
       },
       {
-        "titre": "Ingénieur biomédical",
-        "description": "Conçoit des équipements médicaux innovants.",
-        "niveau": "Bac+5"
+        "titre": "Externat & stages",
+        "duree": "3 ans",
+        "details": "Pratique hospitalière progressive avec encadrement des équipes médicales.",
+        "couleur": "orange",
+        "icone": "work"
+      },
+      {
+        "titre": "Internat & spécialisation",
+        "duree": "3 à 5 ans",
+        "details": "Choisir une spécialité et développer une expertise clinique avancée.",
+        "couleur": "green",
+        "icone": "school"
+      }
+    ],
+    "ecoles": [
+      {
+        "nom": "Université Paris Cité",
+        "ville": "Paris",
+        "formations": ["Médecine générale", "Spécialités médicales"]
+      },
+      {
+        "nom": "Université de Strasbourg",
+        "ville": "Strasbourg",
+        "formations": ["Études médicales", "Recherche clinique"]
       }
     ]
   },
   {
-    "filiere": "Arts",
-    "icon": "palette",
-    "interets": ["Arts", "Design", "Communication"],
-    "metiers": [
+    "nom": "Designer Graphique",
+    "niveau": "Bac+3 à Bac+5",
+    "icone": "palette",
+    "description": "Le designer graphique crée des identités visuelles, interfaces et supports de communication. Il allie sens artistique, stratégie de marque et maîtrise des outils numériques.",
+    "competences": ["Typographie", "Identité visuelle", "Figma", "Illustration", "Direction artistique"],
+    "taille_metier": "Marché dynamique dans les agences et start-ups",
+    "roadmap": [
       {
-        "titre": "Designer Graphique",
-        "description": "Crée des visuels, identités de marque et interfaces.",
-        "niveau": "Bac+3"
+        "titre": "Fondamentaux visuels",
+        "duree": "6 mois",
+        "details": "Apprendre couleur, composition, typographie et principes de narration visuelle.",
+        "couleur": "blue",
+        "icone": "menu_book"
       },
       {
-        "titre": "Directeur artistique",
-        "description": "Pilote la vision créative de projets visuels.",
-        "niveau": "Bac+5"
+        "titre": "Portfolio professionnel",
+        "duree": "6 à 12 mois",
+        "details": "Produire des projets branding, affiches et interfaces dans un portfolio cohérent.",
+        "couleur": "orange",
+        "icone": "work"
+      },
+      {
+        "titre": "Expérience agence/produit",
+        "duree": "12 mois et plus",
+        "details": "Travailler en équipe produit, consolider la méthode UX et la relation client.",
+        "couleur": "green",
+        "icone": "school"
+      }
+    ],
+    "ecoles": [
+      {
+        "nom": "École de Condé",
+        "ville": "Lille",
+        "formations": ["Design graphique", "Direction artistique"]
+      },
+      {
+        "nom": "Gobelins",
+        "ville": "Paris",
+        "formations": ["Motion design", "Design interactif"]
       }
     ]
   }
