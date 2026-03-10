@@ -23,13 +23,17 @@ class Filiere {
 
   /// Construit un objet [Filiere] à partir d'un JSON.
   factory Filiere.fromJson(Map<String, dynamic> json) {
+    final rawMetiers = (json['metiers'] as List<dynamic>? ?? <dynamic>[])
+        .whereType<Map<String, dynamic>>()
+        .toList();
+
     return Filiere(
-      nom: json['filiere'] as String,
-      iconName: json['icon'] as String,
-      metiers: (json['metiers'] as List<dynamic>)
-          .map((item) => Metier.fromJson(item as Map<String, dynamic>))
+      nom: (json['filiere'] ?? '').toString(),
+      iconName: (json['icon'] ?? '').toString(),
+      metiers: rawMetiers
+          .map((item) => Metier.fromJson(item))
           .toList(),
-      interets: (json['interets'] as List<dynamic>)
+      interets: (json['interets'] as List<dynamic>? ?? <dynamic>[])
           .map((item) => item.toString())
           .toList(),
     );

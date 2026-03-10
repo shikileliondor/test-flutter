@@ -283,18 +283,20 @@ class RecommendationsScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(18),
-                  onTap: () {
-                    final firstMetier = filiere.metiers.first;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (_) => MetierDetailsScreen(
-                          metier: firstMetier,
-                          filiereName: filiere.nom,
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: filiere.metiers.isEmpty
+                      ? null
+                      : () {
+                          final firstMetier = filiere.metiers.first;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => MetierDetailsScreen(
+                                metier: firstMetier,
+                                filiereName: filiere.nom,
+                              ),
+                            ),
+                          );
+                        },
                   child: Padding(
                     padding: const EdgeInsets.all(14),
                     child: Column(

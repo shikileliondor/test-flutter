@@ -18,9 +18,9 @@ class Metier {
   /// Construit un objet [Metier] à partir d'un JSON.
   factory Metier.fromJson(Map<String, dynamic> json) {
     return Metier(
-      titre: json['titre'] as String,
-      description: json['description'] as String,
-      niveau: json['niveau'] as String,
+      titre: (json['titre'] ?? '').toString(),
+      description: (json['description'] ?? '').toString(),
+      niveau: (json['niveau'] ?? '').toString(),
     );
   }
 }
