@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'detail_screen.dart';
-import 'widgets/filiere_card.dart';
 import 'models/filiere.dart';
 import 'services/filiere_repository.dart';
+import 'widgets/ecole_card.dart';
+import 'widgets/home_header.dart';
+import 'widgets/metier_card.dart';
+import 'widgets/modern_search_bar.dart';
+import 'widgets/parcours_card.dart';
+import 'widgets/section_title.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +19,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Filiere>> _filieresFuture;
   int _selectedIndex = 0;
+
+  final List<_MetierItem> _metiers = const [
+    _MetierItem('Développeur Web', Icons.code_rounded, Color(0xFFE3EDFF)),
+    _MetierItem('Designer UI/UX', Icons.palette_outlined, Color(0xFFFFE9EF)),
+    _MetierItem('Data Analyst', Icons.analytics_outlined, Color(0xFFE8F8EF)),
+    _MetierItem('Médecin', Icons.local_hospital_outlined, Color(0xFFFFF1DE)),
+    _MetierItem('Architecte', Icons.architecture_outlined, Color(0xFFEEEAFE)),
+  ];
 
   @override
   void initState() {
@@ -38,66 +50,70 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             final filieres = snapshot.data!;
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 18, 20, 4),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Bonjour, Camille',
-                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-                              ),
-                              SizedBox(height: 6),
-                              Text(
-                                'Explore des parcours adaptés à ton avenir',
-                                style: TextStyle(color: Color(0xFF6B7280)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEAF0FF),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Icon(Icons.explore_outlined, color: Color(0xFF4464E0)),
-                        ),
-                      ],
+            final schools = filieres.expand((item) => item.ecoles).toList();
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const HomeHeader(),
+                  const SizedBox(height: 18),
+                  const ModernSearchBar(),
+                  const SizedBox(height: 28),
+                  const SectionTitle(title: 'Métiers populaires'),
+                  const SizedBox(height: 12),
+                  GridView.builder(
+                    itemCount: _metiers.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.3,
                     ),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 14)),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverList.builder(
-                    itemCount: filieres.length,
                     itemBuilder: (context, index) {
-                      final filiere = filieres[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: FiliereCard(
-                          filiere: filiere,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => DetailScreen(filiere: filiere),
-                              ),
-                            );
-                          },
-                        ),
+                      final item = _metiers[index];
+                      return MetierCard(
+                        icon: item.icon,
+                        title: item.label,
+                        backgroundColor: item.color,
                       );
                     },
                   ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
-              ],
+                  const SizedBox(height: 28),
+                  const SectionTitle(title: 'Parcours recommandés'),
+                  const SizedBox(height: 12),
+                  ...filieres.take(3).map(
+                        (filiere) => ParcoursCard(
+                          icon: _iconForFiliere(filiere.icone),
+                          domain: filiere.nom,
+                          description: filiere.description,
+                        ),
+                      ),
+                  const SizedBox(height: 16),
+                  const SectionTitle(title: 'Écoles recommandées'),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 155,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: schools.length >= 4 ? 4 : schools.length,
+                      itemBuilder: (context, index) {
+                        final school = schools[index];
+                        return EcoleCard(
+                          schoolName: school.nom,
+                          city: school.ville,
+                          speciality: school.formations.isNotEmpty
+                              ? school.formations.first
+                              : 'Formation multidisciplinaire',
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -116,4 +132,27 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  IconData _iconForFiliere(String rawIcon) {
+    switch (rawIcon) {
+      case 'computer':
+        return Icons.computer_rounded;
+      case 'biotech':
+        return Icons.biotech_outlined;
+      case 'architecture':
+        return Icons.architecture_rounded;
+      case 'business':
+        return Icons.business_center_outlined;
+      default:
+        return Icons.auto_awesome_outlined;
+    }
+  }
+}
+
+class _MetierItem {
+  const _MetierItem(this.label, this.icon, this.color);
+
+  final String label;
+  final IconData icon;
+  final Color color;
 }
