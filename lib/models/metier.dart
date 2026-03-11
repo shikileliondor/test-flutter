@@ -84,7 +84,11 @@ class Metier {
     final salairePayload = json['salaire_moyen'];
     final salaireMap = salairePayload is Map<String, dynamic>
         ? salairePayload
-        : <String, dynamic>{'moyen': salairePayload};
+        : <String, dynamic>{
+            'minimum': json['salaire_min'],
+            'moyen': salairePayload,
+            'maximum': json['salaire_max'],
+          };
 
     return Metier(
       id: (json['id'] as num? ?? 0).toInt(),
