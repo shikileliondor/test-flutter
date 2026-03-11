@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'models/ecole_model.dart';
 import 'models/filiere.dart';
 import 'services/filiere_repository.dart';
 import 'widgets/ecole_card.dart';
@@ -103,11 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         final school = schools[index];
                         return EcoleCard(
-                          schoolName: school.nom,
-                          city: school.ville,
-                          speciality: school.formations.isNotEmpty
-                              ? school.formations.first
-                              : 'Formation multidisciplinaire',
+                          ecole: EcoleModel(
+                            id: index,
+                            nom: school.nom,
+                            ville: school.ville,
+                            type: 'ecole',
+                            domaines: school.formations,
+                            filieres: school.formations,
+                            logoUrl: '',
+                          ),
+                          onTap: () {},
                         );
                       },
                     ),

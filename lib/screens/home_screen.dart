@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../models/filiere.dart';
 import '../models/metier.dart';
+import '../services/ecole_service.dart';
 import '../services/filiere_repository.dart';
 import '../widgets/filiere_card.dart';
+import 'ecoles_screen.dart';
 import 'metier_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -109,7 +111,18 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _selectedIndex,
         height: 70,
         surfaceTintColor: Colors.white,
-        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+        onDestinationSelected: (index) {
+          setState(() => _selectedIndex = index);
+          if (index == 2) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => EcolesScreen(
+                  ecoleService: EcoleService(baseUrl: 'https://api.parcours.local/api'),
+                ),
+              ),
+            );
+          }
+        },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Accueil'),
           NavigationDestination(icon: Icon(Icons.work_outline), label: 'Métiers'),
