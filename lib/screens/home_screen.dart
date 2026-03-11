@@ -20,14 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Filiere>> _filieresFuture;
 
-  static const _quickDomains = [
-    _DomainChip('Tech',      Icons.computer_rounded,        AppColors.primaryLight, AppColors.primary),
-    _DomainChip('Santé',     Icons.local_hospital_rounded,  AppColors.redLight,     AppColors.red),
-    _DomainChip('Business',  Icons.business_center_rounded, AppColors.orangeLight,  AppColors.orange),
-    _DomainChip('Design',    Icons.palette_rounded,         Color(0xFFFCE8F3),      Color(0xFFE83E8C)),
-    _DomainChip('Ingénierie',Icons.architecture_rounded,    AppColors.greenLight,   AppColors.green),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -64,15 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                // ── Domaines rapides ─────────────────────────────────
-                SliverToBoxAdapter(
-                  child: _buildDomainRow(),
-                ),
-
                 // ── Section title : Parcours ─────────────────────────
                 const SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(20, 28, 20, 14),
+                    padding: EdgeInsets.fromLTRB(20, 22, 20, 14),
                     child: _SectionHeader(
                       title: 'Parcours recommandés',
                       subtitle: 'Choisis un domaine pour commencer',
@@ -168,43 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDomainRow() {
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        itemCount: _quickDomains.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, i) {
-          final d = _quickDomains[i];
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-            decoration: BoxDecoration(
-              color: d.bgColor,
-              borderRadius: BorderRadius.circular(AppRadius.full),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(d.icon, size: 15, color: d.iconColor),
-                const SizedBox(width: 6),
-                Text(
-                  d.label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: d.iconColor,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Metier _buildMetier(Filiere f, int i) {
     return Metier(
       id: i + 1,
@@ -286,12 +236,3 @@ class _SectionHeader extends StatelessWidget {
     );
   }
 }
-
-class _DomainChip {
-  const _DomainChip(this.label, this.icon, this.bgColor, this.iconColor);
-  final String label;
-  final IconData icon;
-  final Color bgColor;
-  final Color iconColor;
-}
-

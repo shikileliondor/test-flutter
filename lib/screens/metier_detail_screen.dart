@@ -10,6 +10,8 @@ import '../widgets/metier_detail/bullet_list_section.dart';
 import '../widgets/metier_detail/metier_header.dart';
 import '../widgets/metier_detail/roadmap_section.dart';
 import '../widgets/metier_detail/salaire_card.dart';
+import '../widgets/app_bottom_navigation.dart';
+import 'main_navigation_screen.dart';
 
 class MetierDetailScreen extends StatelessWidget {
   const MetierDetailScreen({required this.metier, super.key});
@@ -112,6 +114,17 @@ class MetierDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: AppBottomNavigation(
+        currentIndex: 1,
+        onDestinationSelected: (index) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute<void>(
+              builder: (_) => MainNavigationScreen(initialIndex: index),
+            ),
+            (route) => false,
+          );
+        },
       ),
     );
   }
