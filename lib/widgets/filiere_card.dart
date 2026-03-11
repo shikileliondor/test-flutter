@@ -1,5 +1,10 @@
-import 'package:flutter/material.dart';
 
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/filiere_card.dart
+// ─────────────────────────────────────────────────────────────────
+import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import '../models/filiere.dart';
 
 class FiliereCard extends StatefulWidget {
@@ -19,60 +24,104 @@ class FiliereCard extends StatefulWidget {
 class _FiliereCardState extends State<FiliereCard> {
   bool _pressed = false;
 
+  // Associe un couple couleur de fond / couleur d'icône à chaque icône
+  static const _palette = {
+    'computer':          (Color(0xFFEEF0FF), AppColors.primary),
+    'medical_services':  (Color(0xFFFFF0F0), AppColors.red),
+    'palette':           (Color(0xFFFCE8F3), Color(0xFFE83E8C)),
+    'business':          (Color(0xFFFFF4E5), AppColors.orange),
+    'architecture':      (Color(0xFFE6FAF4), AppColors.green),
+    'biotech':           (Color(0xFFE6FAF4), AppColors.green),
+  };
+
   @override
   Widget build(BuildContext context) {
     final icon = _iconFromName(widget.filiere.icone);
+    final colors = _palette[widget.filiere.icone] ??
+        const (AppColors.primaryLight, AppColors.primary);
 
     return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
+      onTapDown:  (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
-      onTapUp: (_) {
-        setState(() => _pressed = false);
-        widget.onTap();
-      },
+      onTapUp:    (_) { setState(() => _pressed = false); widget.onTap(); },
       child: AnimatedScale(
-        duration: const Duration(milliseconds: 180),
+        duration: const Duration(milliseconds: 160),
         curve: Curves.easeOut,
-        scale: _pressed ? 0.98 : 1,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOutCubic,
+        scale: _pressed ? 0.97 : 1.0,
+        child: Container(
+          padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 20,
-                offset: Offset(0, 8),
-              ),
-            ],
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+            boxShadow: AppShadow.card,
           ),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Center(
-                child: Container(
-                  width: 64,
-                  height: 64,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF2F6FF),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(icon, color: const Color(0xFF4464E0), size: 32),
+              // Icône colorée
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: colors.$1,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Icon(icon, color: colors.$2, size: 26),
+              ),
+              const SizedBox(width: 16),
+
+              // Texte
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.filiere.nom,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.text,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.filiere.niveau,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textSub,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Compétences mini-chips
+                    if (widget.filiere.competences.isNotEmpty)
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: widget.filiere.competences.take(3).map((c) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colors.$1,
+                              borderRadius: BorderRadius.circular(AppRadius.full),
+                            ),
+                            child: Text(
+                              c,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: colors.$2,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                widget.filiere.nom,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                widget.filiere.niveau,
-                style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted, size: 20),
             ],
           ),
         ),
@@ -80,15 +129,15 @@ class _FiliereCardState extends State<FiliereCard> {
     );
   }
 
-  IconData _iconFromName(String iconName) {
-    switch (iconName) {
-      case 'medical_services':
-        return Icons.medical_services_outlined;
-      case 'palette':
-        return Icons.palette_outlined;
+  IconData _iconFromName(String name) {
+    switch (name) {
+      case 'medical_services': return Icons.medical_services_outlined;
+      case 'palette':          return Icons.palette_outlined;
+      case 'business':         return Icons.business_center_outlined;
+      case 'architecture':     return Icons.architecture_outlined;
+      case 'biotech':          return Icons.biotech_outlined;
       case 'computer':
-      default:
-        return Icons.computer_outlined;
+      default:                 return Icons.computer_rounded;
     }
   }
 }

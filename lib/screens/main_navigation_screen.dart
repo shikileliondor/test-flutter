@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'ecoles_screen.dart';
 import 'home_screen.dart';
 import 'metiers_screen.dart';
@@ -13,9 +12,9 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int currentIndex = 0;
+  int _currentIndex = 0;
 
-  final List<Widget> pages = const [
+  final List<Widget> _pages = const [
     HomeScreen(),
     MetiersScreen(),
     EcolesScreen(),
@@ -25,21 +24,44 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: currentIndex, children: pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Accueil'),
-          BottomNavigationBarItem(icon: Icon(Icons.work_outline), label: 'Métiers'),
-          BottomNavigationBarItem(icon: Icon(Icons.school_outlined), label: 'Écoles'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profil'),
-        ],
+      body: IndexedStack(index: _currentIndex, children: _pages),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x0F000000),
+              blurRadius: 24,
+              offset: Offset(0, -4),
+            ),
+          ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (i) => setState(() => _currentIndex = i),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home_rounded),
+              label: 'Accueil',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.work_outline_rounded),
+              selectedIcon: Icon(Icons.work_rounded),
+              label: 'Métiers',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.school_outlined),
+              selectedIcon: Icon(Icons.school_rounded),
+              label: 'Écoles',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline_rounded),
+              selectedIcon: Icon(Icons.person_rounded),
+              label: 'Profil',
+            ),
+          ],
+        ),
       ),
     );
   }

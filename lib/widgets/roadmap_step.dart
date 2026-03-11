@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
 
+// ─────────────────────────────────────────────────────────────────
+// widgets/roadmap_step.dart
+// ─────────────────────────────────────────────────────────────────
+import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import '../models/filiere.dart';
 
 class RoadmapStep extends StatelessWidget {
@@ -16,57 +20,117 @@ class RoadmapStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = _colorFromName(step.couleur);
-    final IconData icon = _iconFromName(step.icone);
+    final color = _colorFromName(step.couleur);
+    final bgColor = color.withOpacity(0.12);
+    final icon = _iconFromName(step.icone);
 
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Timeline
           Column(
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: color.withOpacity(0.16),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(icon, size: 18, color: color),
               ),
               if (!isLast)
                 Expanded(
                   child: Container(
                     width: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    color: const Color(0xFFE5E7EB),
+                    margin: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [color.withOpacity(0.3), AppColors.border],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
                   ),
                 ),
             ],
           ),
           const SizedBox(width: 14),
+
+          // Contenu
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x12000000),
-                    blurRadius: 14,
-                    offset: Offset(0, 6),
-                  ),
-                ],
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppRadius.lg),
+                boxShadow: AppShadow.card,
+                border: Border.all(color: AppColors.border, width: 1),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${index + 1}. ${step.titre}',
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  Row(
+                    children: [
+                      // Badge numéro
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          step.titre,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: AppColors.text,
+                          ),
+                        ),
+                      ),
+                      // Badge durée
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: bgColor,
+                          borderRadius: BorderRadius.circular(AppRadius.full),
+                        ),
+                        child: Text(
+                          step.duree,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 6),
-                  Text(step.duree, style: const TextStyle(color: Color(0xFF4B5563))),
                   const SizedBox(height: 8),
-                  Text(step.details, style: const TextStyle(height: 1.4)),
+                  Text(
+                    step.details,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSub,
+                      height: 1.45,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -76,27 +140,23 @@ class RoadmapStep extends StatelessWidget {
     );
   }
 
-  Color _colorFromName(String colorName) {
-    switch (colorName) {
-      case 'green':
-        return const Color(0xFF2BB673);
-      case 'orange':
-        return const Color(0xFFF59E0B);
+  Color _colorFromName(String name) {
+    switch (name) {
+      case 'green':  return AppColors.green;
+      case 'orange': return AppColors.orange;
+      case 'red':    return AppColors.red;
       case 'blue':
-      default:
-        return const Color(0xFF4464E0);
+      default:       return AppColors.primary;
     }
   }
 
-  IconData _iconFromName(String iconName) {
-    switch (iconName) {
-      case 'school':
-        return Icons.school_outlined;
-      case 'work':
-        return Icons.work_outline;
+  IconData _iconFromName(String name) {
+    switch (name) {
+      case 'school':    return Icons.school_rounded;
+      case 'work':      return Icons.work_rounded;
       case 'menu_book':
-      default:
-        return Icons.menu_book_outlined;
+      default:          return Icons.menu_book_rounded;
     }
   }
 }
+

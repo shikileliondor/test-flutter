@@ -1,4 +1,9 @@
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/metier_filters.dart
+// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class MetierFilters extends StatelessWidget {
   const MetierFilters({
@@ -29,57 +34,90 @@ class MetierFilters extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSection('Domaine', domaines, selectedDomaine, onDomaineSelected),
-        const SizedBox(height: 10),
-        _buildSection('Durée des études', durees, selectedDuree, onDureeSelected),
-        const SizedBox(height: 10),
-        _buildSection('Niveau requis', niveaux, selectedNiveau, onNiveauSelected),
-      ],
-    );
-  }
-
-  Widget _buildSection(
-    String title,
-    List<String> options,
-    String selected,
-    ValueChanged<String> onSelected,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF344054),
-          ),
+        _FilterRow(
+          label: 'Domaine',
+          options: domaines,
+          selected: selectedDomaine,
+          onSelected: onDomaineSelected,
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 6,
-          children: options
-              .map(
-                (option) => FilterChip(
-                  selected: selected == option,
-                  label: Text(option),
-                  onSelected: (_) => onSelected(option),
-                  backgroundColor: Colors.white,
-                  selectedColor: const Color(0xFFE9EEFF),
-                  side: BorderSide(
-                    color: selected == option ? const Color(0xFF4464E0) : const Color(0xFFD0D5DD),
-                  ),
-                  labelStyle: TextStyle(
-                    color: selected == option ? const Color(0xFF2F49B3) : const Color(0xFF344054),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  showCheckmark: false,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-                ),
-              )
-              .toList(),
+        const SizedBox(height: 10),
+        _FilterRow(
+          label: 'Durée',
+          options: durees,
+          selected: selectedDuree,
+          onSelected: onDureeSelected,
+        ),
+        const SizedBox(height: 10),
+        _FilterRow(
+          label: 'Niveau',
+          options: niveaux,
+          selected: selectedNiveau,
+          onSelected: onNiveauSelected,
         ),
       ],
     );
   }
 }
+
+class _FilterRow extends StatelessWidget {
+  const _FilterRow({
+    required this.label,
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final String label;
+  final List<String> options;
+  final String selected;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSub,
+            letterSpacing: 0.3,
+          ),
+        ),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: options.map((opt) {
+              final isSelected = selected == opt;
+              return GestureDetector(
+                onTap: () => onSelected(opt),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primary : AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                    boxShadow: isSelected ? [] : AppShadow.card,
+                  ),
+                  child: Text(
+                    opt,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : AppColors.textSub,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+

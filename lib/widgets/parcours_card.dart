@@ -1,4 +1,9 @@
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/parcours_card.dart
+// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class ParcoursCard extends StatelessWidget {
   const ParcoursCard({
@@ -18,51 +23,57 @@ class ParcoursCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x10000000),
-            blurRadius: 14,
-            offset: Offset(0, 6),
-          ),
-        ],
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadow.card,
       ),
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              color: const Color(0xFFE8EEFF),
-              borderRadius: BorderRadius.circular(14),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF5B6AF0), Color(0xFF8B7FF5)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(AppRadius.md),
             ),
-            child: Icon(icon, color: const Color(0xFF4C6FFF)),
+            child: Icon(icon, color: Colors.white, size: 22),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   domain,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF111827),
-                      ),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.text,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF6B7280),
-                      ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSub,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.textMuted),
         ],
       ),
     );
   }
 }
+

@@ -1,5 +1,11 @@
-import 'package:flutter/material.dart';
 
+
+
+// ─────────────────────────────────────────────────────────────────
+// screens/ecoles_screen.dart
+// ─────────────────────────────────────────────────────────────────
+import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import '../models/ecole_model.dart';
 import '../services/ecole_service.dart';
 import '../widgets/ecole_card.dart';
@@ -23,9 +29,9 @@ class _EcolesScreenState extends State<EcolesScreen> {
   String? _selectedDomaine;
   String? _selectedType;
 
-  static const _villes = ['Paris', 'Lyon', 'La Défense'];
-  static const _domaines = ['Technologie', 'Ingénierie', 'Santé', 'Business', 'Créatif'];
-  static const _types = ['Université', 'Grande école', 'Institut'];
+  static const _villes    = ['Abidjan', 'Bouaké', 'Yamoussoukro'];
+  static const _domaines  = ['Technologie', 'Ingénierie', 'Santé', 'Business', 'Créatif'];
+  static const _types     = ['Université', 'Grande école', 'Institut'];
 
   @override
   void initState() {
@@ -41,155 +47,135 @@ class _EcolesScreenState extends State<EcolesScreen> {
 
   Future<List<EcoleModel>> _loadEcoles() {
     return _ecoleService.fetchEcoles(
-      search: _searchController.text,
-      ville: _selectedVille,
+      search:  _searchController.text,
+      ville:   _selectedVille,
       domaine: _selectedDomaine,
-      type: _selectedType,
+      type:    _selectedType,
     );
   }
 
-  void _refresh() {
-    setState(() {
-      _ecolesFuture = _loadEcoles();
-    });
-  }
+  void _refresh() => setState(() => _ecolesFuture = _loadEcoles());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Écoles')),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final horizontalPadding = constraints.maxWidth > 600 ? 24.0 : 20.0;
-
-            return RefreshIndicator(
-              onRefresh: () async => _refresh(),
-              child: FutureBuilder<List<EcoleModel>>(
-                future: _ecolesFuture,
-                builder: (context, snapshot) {
-                  return ListView(
-                    physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                    padding: EdgeInsets.fromLTRB(horizontalPadding, 12, horizontalPadding, 20),
+        child: RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () async => _refresh(),
+          child: FutureBuilder<List<EcoleModel>>(
+            future: _ecolesFuture,
+            builder: (context, snapshot) {
+              return ListView(
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                children: [
+                  // ── Header ──────────────────────────────────────
+                  Row(
                     children: [
-                      Text(
-                        'Écoles',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Écoles',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.text,
+                              ),
                             ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Découvre les écoles et universités qui forment les professionnels de demain.',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF6B7280),
+                            SizedBox(height: 4),
+                            Text(
+                              'Les meilleures formations de CI',
+                              style: TextStyle(fontSize: 14, color: AppColors.textSub),
                             ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 18),
-                      EcoleSearchBar(
-                        controller: _searchController,
-                        onChanged: (_) => _refresh(),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLight,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
+                        child: const Icon(Icons.location_on_outlined, color: AppColors.primary, size: 20),
                       ),
-                      const SizedBox(height: 16),
-                      EcoleFilterChips(
-                        label: 'Ville',
-                        options: _villes,
-                        selectedValue: _selectedVille,
-                        onSelected: (value) {
-                          _selectedVille = value;
-                          _refresh();
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      EcoleFilterChips(
-                        label: 'Domaine',
-                        options: _domaines,
-                        selectedValue: _selectedDomaine,
-                        onSelected: (value) {
-                          _selectedDomaine = value;
-                          _refresh();
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      EcoleFilterChips(
-                        label: 'Type d\'établissement',
-                        options: _types,
-                        selectedValue: _selectedType,
-                        onSelected: (value) {
-                          _selectedType = value;
-                          _refresh();
-                        },
-                      ),
-                      const SizedBox(height: 18),
-                      ..._buildEcolesContent(snapshot),
                     ],
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
+                  ),
+                  const SizedBox(height: 20),
 
-  List<Widget> _buildEcolesContent(AsyncSnapshot<List<EcoleModel>> snapshot) {
-    if (snapshot.connectionState != ConnectionState.done) {
-      return const [
-        SizedBox(
-          height: 280,
-          child: Center(child: CircularProgressIndicator()),
-        ),
-      ];
-    }
+                  // ── Search ──────────────────────────────────────
+                  EcoleSearchBar(
+                    controller: _searchController,
+                    onChanged: (_) => _refresh(),
+                  ),
+                  const SizedBox(height: 16),
 
-    if (snapshot.hasError) {
-      return [
-        SizedBox(
-          height: 280,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Une erreur est survenue lors du chargement.'),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: _refresh,
-                  child: const Text('Réessayer'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ];
-    }
+                  // ── Filters ─────────────────────────────────────
+                  EcoleFilterChips(
+                    label: 'Ville',
+                    options: _villes,
+                    selectedValue: _selectedVille,
+                    onSelected: (v) { _selectedVille = v; _refresh(); },
+                  ),
+                  const SizedBox(height: 10),
+                  EcoleFilterChips(
+                    label: 'Domaine',
+                    options: _domaines,
+                    selectedValue: _selectedDomaine,
+                    onSelected: (v) { _selectedDomaine = v; _refresh(); },
+                  ),
+                  const SizedBox(height: 10),
+                  EcoleFilterChips(
+                    label: "Type d'établissement",
+                    options: _types,
+                    selectedValue: _selectedType,
+                    onSelected: (v) { _selectedType = v; _refresh(); },
+                  ),
+                  const SizedBox(height: 22),
 
-    final ecoles = snapshot.data ?? const <EcoleModel>[];
-    if (ecoles.isEmpty) {
-      return const [
-        SizedBox(
-          height: 280,
-          child: Center(child: Text('Aucune école trouvée.')),
-        ),
-      ];
-    }
-
-    return [
-      ...ecoles.map(
-        (ecole) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: EcoleCard(
-            ecole: ecole,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => EcoleDetailScreen(ecole: ecole),
-                ),
+                  // ── Content ─────────────────────────────────────
+                  ..._buildContent(snapshot),
+                ],
               );
             },
           ),
         ),
       ),
-    ];
+    );
+  }
+
+  List<Widget> _buildContent(AsyncSnapshot<List<EcoleModel>> snap) {
+    if (snap.connectionState != ConnectionState.done) {
+      return const [SizedBox(height: 280, child: Center(child: CircularProgressIndicator()))];
+    }
+    if (snap.hasError) {
+      return [
+        SizedBox(
+          height: 280,
+          child: Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              const Text('Une erreur est survenue.'),
+              const SizedBox(height: 12),
+              ElevatedButton(onPressed: _refresh, child: const Text('Réessayer')),
+            ]),
+          ),
+        ),
+      ];
+    }
+    final ecoles = snap.data ?? const <EcoleModel>[];
+    if (ecoles.isEmpty) {
+      return const [SizedBox(height: 280, child: Center(child: Text('Aucune école trouvée.')))];
+    }
+    return ecoles.map((e) => Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: EcoleCard(
+        ecole: e,
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => EcoleDetailScreen(ecole: e)),
+        ),
+      ),
+    )).toList();
   }
 }

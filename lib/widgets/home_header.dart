@@ -1,52 +1,74 @@
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Parcours',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1B1D21),
+        // Logo / Titre
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF5B6AF0), Color(0xFF8B7FF5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 18,
-                    offset: Offset(0, 8),
+                    child: const Icon(Icons.explore_rounded, color: Colors.white, size: 18),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Parcours',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.text,
+                    ),
                   ),
                 ],
               ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_none_rounded),
-                color: const Color(0xFF3A3D44),
-                tooltip: 'Notifications',
+              const SizedBox(height: 4),
+              const Text(
+                'Découvre ton futur métier',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSub,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          'Découvre ton futur métier',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1F2937),
-              ),
+
+        // Bouton notification
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            boxShadow: AppShadow.card,
+          ),
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.notifications_none_rounded,
+              color: AppColors.text,
+              size: 20,
+            ),
+            tooltip: 'Notifications',
+          ),
         ),
       ],
     );

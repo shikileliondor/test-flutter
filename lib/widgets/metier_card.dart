@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
 
+// ─────────────────────────────────────────────────────────────────
+// widgets/metier_card.dart
+// ─────────────────────────────────────────────────────────────────
+import 'package:flutter/material.dart';
+import '../app_theme.dart';
 import '../models/metier.dart';
 
 class MetierCard extends StatelessWidget {
@@ -21,119 +25,157 @@ class MetierCard extends StatelessWidget {
 
   final Metier? metier;
   final VoidCallback? onTap;
-
   final IconData? icon;
   final String? title;
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    if (metier != null) {
-      return InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
-        child: Ink(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x12000000),
-                blurRadius: 18,
-                offset: Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 48,
-                width: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE9EEFF),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(_iconFromString(metier!.icone), color: const Color(0xFF2F49B3)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      metier!.nom,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF101828),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      metier!.domaine.isEmpty ? 'Domaine non renseigné' : metier!.domaine,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF667085),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Salaire moyen: ${metier!.salaireFormate}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF344054),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      metier!.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Color(0xFF475467)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    return metier != null ? _buildFull(context) : _buildCompact();
+  }
 
+  // ── Version complète (liste des métiers) ─────────────────────
+  Widget _buildFull(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          boxShadow: AppShadow.card,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icône
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors.primaryLight,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: Icon(
+                _iconFromString(metier!.icone),
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Contenu
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          metier!.nom,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.text,
+                          ),
+                        ),
+                      ),
+                      // Badge domaine
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLight,
+                          borderRadius: BorderRadius.circular(AppRadius.full),
+                        ),
+                        child: Text(
+                          metier!.domaine.isEmpty ? '—' : metier!.domaine,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    metier!.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSub,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Ligne salaire
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: AppColors.greenLight,
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                        ),
+                        child: const Icon(
+                          Icons.attach_money_rounded,
+                          size: 13,
+                          color: AppColors.green,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        metier!.salaireFormate,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Version compacte (accueil / grille) ──────────────────────
+  Widget _buildCompact() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x12000000),
-            blurRadius: 16,
-            offset: Offset(0, 8),
-          ),
-        ],
+        color: backgroundColor ?? AppColors.primaryLight,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadow.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 42,
-            width: 42,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(icon, color: const Color(0xFF1F2937)),
+            child: Icon(icon, size: 20, color: AppColors.primary),
           ),
           const Spacer(),
           Text(
             title ?? '',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1F2937),
-                ),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: AppColors.text,
+            ),
           ),
         ],
       ),
@@ -142,18 +184,12 @@ class MetierCard extends StatelessWidget {
 
   IconData _iconFromString(String key) {
     switch (key) {
-      case 'engineering':
-        return Icons.engineering_outlined;
-      case 'science':
-        return Icons.science_outlined;
-      case 'health':
-        return Icons.health_and_safety_outlined;
-      case 'business':
-        return Icons.business_center_outlined;
-      case 'palette':
-        return Icons.palette_outlined;
-      default:
-        return Icons.work_outline;
+      case 'engineering': return Icons.engineering_outlined;
+      case 'science':     return Icons.science_outlined;
+      case 'health':      return Icons.health_and_safety_outlined;
+      case 'business':    return Icons.business_center_outlined;
+      case 'palette':     return Icons.palette_outlined;
+      default:            return Icons.work_outline_rounded;
     }
   }
-}
+ }

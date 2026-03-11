@@ -1,4 +1,10 @@
+
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/ecole_search_bar.dart
+// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class EcoleSearchBar extends StatelessWidget {
   const EcoleSearchBar({
@@ -12,18 +18,23 @@ class EcoleSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        hintText: 'Rechercher par nom, ville ou spécialité',
-        prefixIcon: const Icon(Icons.search_rounded),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadow.card,
+      ),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        style: const TextStyle(fontSize: 14, color: AppColors.text),
+        decoration: const InputDecoration(
+          hintText: 'Nom, ville ou spécialité…',
+          hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 14),
+          prefixIcon: Icon(Icons.search_rounded, color: AppColors.textMuted, size: 20),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(vertical: 16),
         ),
       ),
     );

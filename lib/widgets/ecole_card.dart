@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../app_theme.dart';
 import '../models/ecole_model.dart';
 
 class EcoleCard extends StatelessWidget {
@@ -14,75 +14,122 @@ class EcoleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(18),
+    return GestureDetector(
       onTap: onTap,
-      child: Ink(
+      child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 16,
-              offset: Offset(0, 6),
-            ),
-          ],
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          boxShadow: AppShadow.card,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 56,
-                height: 56,
-                color: const Color(0xFFF3F4F6),
-                child: ecole.logoUrl.isNotEmpty
-                    ? Image.network(
+            // Logo / Icône
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: AppColors.primaryLight,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: ecole.logoUrl.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: Image.network(
                         ecole.logoUrl,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.school_outlined),
-                      )
-                    : const Icon(Icons.school_outlined),
-              ),
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.school_rounded,
+                          color: AppColors.primary,
+                          size: 26,
+                        ),
+                      ),
+                    )
+                  : const Icon(Icons.school_rounded, color: AppColors.primary, size: 26),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
+
+            // Infos
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     ecole.nom,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.text,
+                    ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    ecole.ville,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFF6B7280),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on_rounded,
+                        size: 13,
+                        color: AppColors.textSub,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        ecole.ville,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.textSub,
                         ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    ecole.filieres.join(' • '),
-                    maxLines: 2,
+                    ecole.filieres.take(3).join(' · '),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: const Color(0xFF4B5563),
-                        ),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.chevron_right_rounded, color: Color(0xFF9CA3AF)),
+
+            // Badge type + flèche
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                  ),
+                  child: Text(
+                    ecole.type.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textMuted,
+                  size: 20,
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+

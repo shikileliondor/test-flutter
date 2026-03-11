@@ -1,18 +1,36 @@
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/section_title.dart
+// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class SectionTitle extends StatelessWidget {
-  const SectionTitle({super.key, required this.title});
+  const SectionTitle({
+    super.key,
+    required this.title,
+    this.trailing,
+  });
 
   final String title;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF111827),
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppColors.text,
+            ),
           ),
+        ),
+        if (trailing != null) trailing!,
+      ],
     );
   }
 }

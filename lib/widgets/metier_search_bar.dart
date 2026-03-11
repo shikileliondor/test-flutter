@@ -1,9 +1,15 @@
+
+
+// ─────────────────────────────────────────────────────────────────
+// widgets/metier_search_bar.dart
+// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../app_theme.dart';
 
 class MetierSearchBar extends StatelessWidget {
   const MetierSearchBar({
-    required this.onChanged,
     super.key,
+    required this.onChanged,
   });
 
   final ValueChanged<String> onChanged;
@@ -11,29 +17,21 @@ class MetierSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 52,
       decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x15000000),
-            blurRadius: 16,
-            offset: Offset(0, 8),
-          ),
-        ],
-        borderRadius: BorderRadius.circular(18),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadow.card,
       ),
       child: TextField(
         onChanged: onChanged,
-        decoration: InputDecoration(
-          hintText: 'Rechercher par nom ou domaine',
-          hintStyle: const TextStyle(color: Color(0xFF98A2B3)),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF667085)),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18),
-            borderSide: BorderSide.none,
-          ),
+        style: const TextStyle(fontSize: 14, color: AppColors.text),
+        decoration: const InputDecoration(
+          hintText: 'Rechercher un métier ou domaine…',
+          hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 14),
+          prefixIcon: Icon(Icons.search_rounded, color: AppColors.textMuted, size: 20),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(vertical: 16),
         ),
       ),
     );

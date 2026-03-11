@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../app_theme.dart';
 
 class SectionCard extends StatelessWidget {
   const SectionCard({
@@ -17,35 +18,43 @@ class SectionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x120F172A),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        boxShadow: AppShadow.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── En-tête de section ────────────────────────────────
           Row(
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 20, color: const Color(0xFF3B82F6)),
-                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                  ),
+                  child: Icon(icon, size: 16, color: AppColors.primary),
+                ),
+                const SizedBox(width: 10),
               ],
               Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 6),
+          const Divider(color: AppColors.border, height: 18),
           child,
         ],
       ),
     );
   }
 }
+
