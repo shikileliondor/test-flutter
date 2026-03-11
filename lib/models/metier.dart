@@ -58,6 +58,8 @@ class Metier {
     required this.roadmap,
     required this.domaine,
     required this.niveauRequis,
+    this.createdAt,
+    this.updatedAt,
   });
 
   final int id;
@@ -72,6 +74,8 @@ class Metier {
   final RoadmapMetier roadmap;
   final String domaine;
   final String niveauRequis;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   String get salaireFormate {
     if (salaireMoyen.moyen <= 0) {
@@ -114,6 +118,16 @@ class Metier {
       ),
       domaine: (json['domaine'] ?? '').toString(),
       niveauRequis: (json['niveau_requis'] ?? '').toString(),
+      createdAt: _parseDate(json['created_at']),
+      updatedAt: _parseDate(json['updated_at']),
     );
+  }
+
+  static DateTime? _parseDate(dynamic rawDate) {
+    final value = rawDate?.toString();
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    return DateTime.tryParse(value);
   }
 }
