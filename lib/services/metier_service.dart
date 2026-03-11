@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/metier.dart';
@@ -8,13 +10,25 @@ import 'mock_data.dart';
 class MetierService {
   MetierService({
     this.baseUrl,
-    this.useMockData = true,
+    this.useMockData = false,
     http.Client? client,
   }) : _client = client ?? http.Client();
 
   final String? baseUrl;
   final bool useMockData;
   final http.Client _client;
+
+  String get _apiBaseUrl {
+    if (baseUrl != null && baseUrl!.isNotEmpty) {
+      return baseUrl!;
+    }
+
+    if (!kIsWeb && Platform.isAndroid) {
+      return 'http://10.0.2.2:8000/api';
+    }
+
+    return 'http://127.0.0.1:8000/api';
+  }
 
   Future<List<Metier>> fetchMetiers({
     String? search,
@@ -31,7 +45,7 @@ class MetierService {
       );
     }
 
-    final uri = Uri.parse('$baseUrl/metiers').replace(
+    final uri = Uri.parse('$_apiBaseUrl/metiers').replace(
       queryParameters: {
         if (search != null && search.isNotEmpty) 'search': search,
         if (domaine != null && domaine.isNotEmpty) 'domaine': domaine,
@@ -59,7 +73,7 @@ class MetierService {
       return MockData.metiers.firstWhere((metier) => metier.id == id);
     }
 
-    final response = await _client.get(Uri.parse('$baseUrl/metiers/$id'));
+    final response = await _client.get(Uri.parse('$_apiBaseUrl/metiers/$id'));
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Erreur API: ${response.statusCode}');
