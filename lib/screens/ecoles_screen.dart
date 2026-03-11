@@ -59,16 +59,18 @@ class _EcolesScreenState extends State<EcolesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Écoles')),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async => _refresh(),
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final horizontalPadding = constraints.maxWidth > 600 ? 24.0 : 20.0;
+
+            return RefreshIndicator(
+              onRefresh: () async => _refresh(),
+              child: FutureBuilder<List<EcoleModel>>(
+                future: _ecolesFuture,
+                builder: (context, snapshot) {
+                  return ListView(
+                    physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                    padding: EdgeInsets.fromLTRB(horizontalPadding, 12, horizontalPadding, 20),
                     children: [
                       Text(
                         'Écoles',
@@ -119,73 +121,75 @@ class _EcolesScreenState extends State<EcolesScreen> {
                         },
                       ),
                       const SizedBox(height: 18),
+                      ..._buildEcolesContent(snapshot),
                     ],
-                  ),
-                ),
-              ),
-              FutureBuilder<List<EcoleModel>>(
-                future: _ecolesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('Une erreur est survenue lors du chargement.'),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: _refresh,
-                              child: const Text('Réessayer'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  final ecoles = snapshot.data ?? const <EcoleModel>[];
-                  if (ecoles.isEmpty) {
-                    return const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: Text('Aucune école trouvée.')),
-                    );
-                  }
-
-                  return SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    sliver: SliverList.separated(
-                      itemCount: ecoles.length,
-                      itemBuilder: (context, index) {
-                        final ecole = ecoles[index];
-                        return EcoleCard(
-                          ecole: ecole,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => EcoleDetailScreen(ecole: ecole),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    ),
                   );
                 },
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  List<Widget> _buildEcolesContent(AsyncSnapshot<List<EcoleModel>> snapshot) {
+    if (snapshot.connectionState != ConnectionState.done) {
+      return const [
+        SizedBox(
+          height: 280,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ];
+    }
+
+    if (snapshot.hasError) {
+      return [
+        SizedBox(
+          height: 280,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Une erreur est survenue lors du chargement.'),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _refresh,
+                  child: const Text('Réessayer'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ];
+    }
+
+    final ecoles = snapshot.data ?? const <EcoleModel>[];
+    if (ecoles.isEmpty) {
+      return const [
+        SizedBox(
+          height: 280,
+          child: Center(child: Text('Aucune école trouvée.')),
+        ),
+      ];
+    }
+
+    return [
+      ...ecoles.map(
+        (ecole) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: EcoleCard(
+            ecole: ecole,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => EcoleDetailScreen(ecole: ecole),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    ];
   }
 }
