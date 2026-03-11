@@ -17,10 +17,10 @@ class MetiersScreen extends StatefulWidget {
 
 class _MetiersScreenState extends State<MetiersScreen> {
   static const _domaines = ['Tous', 'Technologie', 'Santé', 'Business', 'Ingénierie', 'Créatif'];
-  static const _durees = ['Toutes', '2 ans', '3 ans', '5 ans', '6+ ans'];
+  static const _durees = ['Toutes', '3 ans', '3 à 5 ans', '5 ans', '6+ ans'];
   static const _niveaux = ['Tous', 'Bac', 'Bac+2', 'Bac+3', 'Bac+5'];
 
-  final MetierService _service = MetierService(baseUrl: 'http://localhost:8000/api');
+  final MetierService _service = MetierService();
 
   bool _loading = true;
   String? _error;

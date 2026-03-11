@@ -8,12 +8,7 @@ import '../widgets/ecole_search_bar.dart';
 import 'ecole_detail_screen.dart';
 
 class EcolesScreen extends StatefulWidget {
-  const EcolesScreen({
-    super.key,
-    required this.ecoleService,
-  });
-
-  final EcoleService ecoleService;
+  const EcolesScreen({super.key});
 
   @override
   State<EcolesScreen> createState() => _EcolesScreenState();
@@ -21,15 +16,16 @@ class EcolesScreen extends StatefulWidget {
 
 class _EcolesScreenState extends State<EcolesScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final EcoleService _ecoleService = EcoleService();
   late Future<List<EcoleModel>> _ecolesFuture;
 
   String? _selectedVille;
   String? _selectedDomaine;
   String? _selectedType;
 
-  static const _villes = ['Dakar', 'Abidjan', 'Paris', 'Lyon'];
-  static const _domaines = ['Informatique', 'Santé', 'Commerce', 'Ingénierie'];
-  static const _types = ['universite', 'grande ecole', 'institut'];
+  static const _villes = ['Paris', 'Lyon', 'La Défense'];
+  static const _domaines = ['Technologie', 'Ingénierie', 'Santé', 'Business', 'Créatif'];
+  static const _types = ['Université', 'Grande école', 'Institut'];
 
   @override
   void initState() {
@@ -44,7 +40,7 @@ class _EcolesScreenState extends State<EcolesScreen> {
   }
 
   Future<List<EcoleModel>> _loadEcoles() {
-    return widget.ecoleService.fetchEcoles(
+    return _ecoleService.fetchEcoles(
       search: _searchController.text,
       ville: _selectedVille,
       domaine: _selectedDomaine,
