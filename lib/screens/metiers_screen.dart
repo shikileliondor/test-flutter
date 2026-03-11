@@ -77,70 +77,78 @@ class _MetiersScreenState extends State<MetiersScreen> {
         surfaceTintColor: Colors.transparent,
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _loadMetiers,
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
-            children: [
-              const Text(
-                'Explore les métiers et découvre ton futur.',
-                style: TextStyle(color: Color(0xFF667085)),
-              ),
-              const SizedBox(height: 16),
-              MetierSearchBar(
-                onChanged: (value) {
-                  _search = value;
-                  _loadMetiers();
-                },
-              ),
-              const SizedBox(height: 14),
-              MetierFilters(
-                domaines: _domaines,
-                durees: _durees,
-                niveaux: _niveaux,
-                selectedDomaine: _selectedDomaine,
-                selectedDuree: _selectedDuree,
-                selectedNiveau: _selectedNiveau,
-                onDomaineSelected: (value) {
-                  setState(() => _selectedDomaine = value);
-                  _loadMetiers();
-                },
-                onDureeSelected: (value) {
-                  setState(() => _selectedDuree = value);
-                  _loadMetiers();
-                },
-                onNiveauSelected: (value) {
-                  setState(() => _selectedNiveau = value);
-                  _loadMetiers();
-                },
-              ),
-              const SizedBox(height: 18),
-              if (_loading)
-                const SizedBox(height: 280, child: MetiersLoadingView())
-              else if (_error != null)
-                SizedBox(
-                  height: 280,
-                  child: MetiersErrorView(message: _error!, onRetry: _loadMetiers),
-                )
-              else if (_metiers.isEmpty)
-                const SizedBox(height: 280, child: MetiersEmptyView())
-              else
-                ..._metiers.map(
-                  (metier) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: MetierCard(
-                      metier: metier,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(builder: (_) => MetierDetailScreen(metier: metier)),
-                        );
-                      },
-                    ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final horizontalPadding = constraints.maxWidth > 600 ? 24.0 : 20.0;
+
+            return RefreshIndicator(
+              onRefresh: _loadMetiers,
+              child: ListView(
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                padding: EdgeInsets.fromLTRB(horizontalPadding, 6, horizontalPadding, 20),
+                children: [
+                  const Text(
+                    'Explore les métiers et découvre ton futur.',
+                    style: TextStyle(color: Color(0xFF667085)),
                   ),
-                ),
-            ],
-          ),
+                  const SizedBox(height: 16),
+                  MetierSearchBar(
+                    onChanged: (value) {
+                      _search = value;
+                      _loadMetiers();
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  MetierFilters(
+                    domaines: _domaines,
+                    durees: _durees,
+                    niveaux: _niveaux,
+                    selectedDomaine: _selectedDomaine,
+                    selectedDuree: _selectedDuree,
+                    selectedNiveau: _selectedNiveau,
+                    onDomaineSelected: (value) {
+                      setState(() => _selectedDomaine = value);
+                      _loadMetiers();
+                    },
+                    onDureeSelected: (value) {
+                      setState(() => _selectedDuree = value);
+                      _loadMetiers();
+                    },
+                    onNiveauSelected: (value) {
+                      setState(() => _selectedNiveau = value);
+                      _loadMetiers();
+                    },
+                  ),
+                  const SizedBox(height: 18),
+                  if (_loading)
+                    const SizedBox(height: 280, child: MetiersLoadingView())
+                  else if (_error != null)
+                    SizedBox(
+                      height: 280,
+                      child: MetiersErrorView(message: _error!, onRetry: _loadMetiers),
+                    )
+                  else if (_metiers.isEmpty)
+                    const SizedBox(height: 280, child: MetiersEmptyView())
+                  else
+                    ..._metiers.map(
+                      (metier) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: MetierCard(
+                          metier: metier,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => MetierDetailScreen(metier: metier),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
