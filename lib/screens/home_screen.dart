@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../models/filiere.dart';
 import '../models/metier.dart';
-import '../services/ecole_service.dart';
 import '../services/filiere_repository.dart';
 import '../widgets/filiere_card.dart';
-import 'ecoles_screen.dart';
 import 'metier_detail_screen.dart';
-import 'metiers_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Filiere>> _filieresFuture;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -102,28 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                const SliverToBoxAdapter(child: SizedBox(height: 30)),
               ],
             );
           },
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        height: 70,
-        surfaceTintColor: Colors.white,
-        onDestinationSelected: (index) {
-          setState(() => _selectedIndex = index);
-          if (index == 1) {
-            Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const MetiersScreen()));
-          }
-        },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Accueil'),
-          NavigationDestination(icon: Icon(Icons.work_outline), label: 'Métiers'),
-          NavigationDestination(icon: Icon(Icons.school_outlined), label: 'Écoles'),
-          NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profil'),
-        ],
       ),
     );
   }
@@ -135,11 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       description: filiere.description,
       salaireMoyen: const SalaireMetier(minimum: 28000, moyen: 42000, maximum: 65000),
       competencesRequises: filiere.competences,
-      filieresEtudes: [
-        'BTS / BUT lié au domaine',
-        'Licence professionnelle',
-        'Master ou école spécialisée',
-      ],
+      filieresEtudes: const ['BTS / BUT lié au domaine', 'Licence professionnelle', 'Master ou école spécialisée'],
       dureeEtudes: filiere.niveau,
       ecolesRecommandees: filiere.ecoles.map((ecole) => '${ecole.nom} (${ecole.ville})').toList(),
       icone: filiere.icone,
