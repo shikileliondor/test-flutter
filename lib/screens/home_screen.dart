@@ -5,6 +5,7 @@ import '../models/metier.dart';
 import '../services/filiere_repository.dart';
 import '../widgets/filiere_card.dart';
 import 'metier_detail_screen.dart';
+import 'metiers_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -109,7 +110,12 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _selectedIndex,
         height: 70,
         surfaceTintColor: Colors.white,
-        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+        onDestinationSelected: (index) {
+          setState(() => _selectedIndex = index);
+          if (index == 1) {
+            Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const MetiersScreen()));
+          }
+        },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Accueil'),
           NavigationDestination(icon: Icon(Icons.work_outline), label: 'Métiers'),
@@ -144,6 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
           'Projets terrain ou freelance',
         ],
       ),
+      domaine: 'Technologie',
+      niveauRequis: filiere.niveau,
     );
   }
 }
