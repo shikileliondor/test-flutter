@@ -7,6 +7,7 @@ import '../services/filiere_repository.dart';
 import '../widgets/filiere_card.dart';
 import 'ecoles_screen.dart';
 import 'metier_detail_screen.dart';
+import 'metiers_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -113,14 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
         surfaceTintColor: Colors.white,
         onDestinationSelected: (index) {
           setState(() => _selectedIndex = index);
-          if (index == 2) {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => EcolesScreen(
-                  ecoleService: EcoleService(baseUrl: 'https://api.parcours.local/api'),
-                ),
-              ),
-            );
+          if (index == 1) {
+            Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const MetiersScreen()));
           }
         },
         destinations: const [
@@ -157,6 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
           'Projets terrain ou freelance',
         ],
       ),
+      domaine: 'Technologie',
+      niveauRequis: filiere.niveau,
     );
   }
 }

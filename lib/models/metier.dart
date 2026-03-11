@@ -37,9 +37,9 @@ class SalaireMetier {
 
   factory SalaireMetier.fromJson(Map<String, dynamic> json) {
     return SalaireMetier(
-      minimum: (json['minimum'] as num? ?? 0).toInt(),
+      minimum: (json['minimum'] as num? ?? json['moyen'] as num? ?? 0).toInt(),
       moyen: (json['moyen'] as num? ?? 0).toInt(),
-      maximum: (json['maximum'] as num? ?? 0).toInt(),
+      maximum: (json['maximum'] as num? ?? json['moyen'] as num? ?? 0).toInt(),
     );
   }
 }
@@ -56,6 +56,8 @@ class Metier {
     required this.ecolesRecommandees,
     required this.icone,
     required this.roadmap,
+    required this.domaine,
+    required this.niveauRequis,
   });
 
   final int id;
@@ -68,16 +70,27 @@ class Metier {
   final List<String> ecolesRecommandees;
   final String icone;
   final RoadmapMetier roadmap;
+  final String domaine;
+  final String niveauRequis;
+
+  String get salaireFormate {
+    if (salaireMoyen.moyen <= 0) {
+      return 'Non renseigné';
+    }
+    return '${salaireMoyen.moyen} € / an';
+  }
 
   factory Metier.fromJson(Map<String, dynamic> json) {
+    final salairePayload = json['salaire_moyen'];
+    final salaireMap = salairePayload is Map<String, dynamic>
+        ? salairePayload
+        : <String, dynamic>{'moyen': salairePayload};
+
     return Metier(
       id: (json['id'] as num? ?? 0).toInt(),
       nom: (json['nom'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
-      salaireMoyen: SalaireMetier.fromJson(
-        json['salaire_moyen'] as Map<String, dynamic>? ??
-            const <String, dynamic>{},
-      ),
+      salaireMoyen: SalaireMetier.fromJson(salaireMap),
       competencesRequises:
           (json['competences_requises'] as List<dynamic>? ?? const <dynamic>[])
               .map((item) => item.toString())
@@ -95,6 +108,8 @@ class Metier {
       roadmap: RoadmapMetier.fromJson(
         json['roadmap'] as Map<String, dynamic>? ?? const <String, dynamic>{},
       ),
+      domaine: (json['domaine'] ?? '').toString(),
+      niveauRequis: (json['niveau_requis'] ?? '').toString(),
     );
   }
 }

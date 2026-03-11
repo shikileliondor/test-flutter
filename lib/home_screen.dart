@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     itemBuilder: (context, index) {
                       final item = _metiers[index];
-                      return MetierCard(
+                      return MetierCard.compact(
                         icon: item.icon,
                         title: item.label,
                         backgroundColor: item.color,
