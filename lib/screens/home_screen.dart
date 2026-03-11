@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../models/filiere.dart';
 import '../models/metier.dart';
+import '../services/ecole_service.dart';
 import '../services/filiere_repository.dart';
 import '../widgets/filiere_card.dart';
+import 'ecoles_screen.dart';
 import 'metier_detail_screen.dart';
 import 'metiers_screen.dart';
 
