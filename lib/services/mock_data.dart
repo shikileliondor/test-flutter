@@ -5,9 +5,9 @@ class MockData {
   static const List<Metier> metiers = [
     Metier(
       id: 1,
-      nom: 'Développeur Web',
-      description: 'Conçoit et développe des applications web modernes, performantes et accessibles.',
-      salaireMoyen: SalaireMetier(minimum: 28000, moyen: 42000, maximum: 65000),
+       nom: 'Développeur Web',
+       description: 'Conçoit et développe des applications web modernes, performantes et accessibles.',
+       salaireMoyen: SalaireMetier(minimum: 28000, moyen: 42000, maximum: 65000),
       competencesRequises: ['Flutter', 'JavaScript', 'UI responsive'],
       filieresEtudes: ['BUT Informatique', 'Licence informatique', 'Master développement web'],
       dureeEtudes: '3 à 5 ans',
