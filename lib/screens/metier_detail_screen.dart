@@ -1,130 +1,190 @@
-
-
-// ─────────────────────────────────────────────────────────────────
-// screens/metier_detail_screen.dart
-// ─────────────────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
-import '../app_theme.dart';
-import '../models/metier.dart';
-import '../widgets/metier_detail/bullet_list_section.dart';
-import '../widgets/metier_detail/metier_header.dart';
-import '../widgets/metier_detail/roadmap_section.dart';
-import '../widgets/metier_detail/salaire_card.dart';
-import '../widgets/app_bottom_navigation.dart';
-import 'main_navigation_screen.dart';
 
-class MetierDetailScreen extends StatelessWidget {
-  const MetierDetailScreen({required this.metier, super.key});
+import '../models/metier_model.dart';
+import '../services/api_service.dart';
 
-  final Metier metier;
+class MetierDetailScreen extends StatefulWidget {
+  const MetierDetailScreen({
+    super.key,
+    this.metierId,
+    this.metier,
+  });
+
+  final int? metierId;
+  final dynamic metier;
+
+  @override
+  State<MetierDetailScreen> createState() => _MetierDetailScreenState();
+}
+
+class _MetierDetailScreenState extends State<MetierDetailScreen> {
+  final ApiService _apiService = ApiService();
+  late Future<MetierFiche> _ficheFuture;
+
+  int get _id {
+    if (widget.metierId != null) {
+      return widget.metierId!;
+    }
+
+    final dynamic rawId = widget.metier?.id;
+    if (rawId is int) {
+      return rawId;
+    }
+
+    throw ArgumentError('MetierDetailScreen nécessite metierId ou metier.id');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _ficheFuture = _apiService.fetchMetierFiche(_id);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final horizontalPadding = MediaQuery.sizeOf(context).width > 600 ? 24.0 : 18.0;
-
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // ── Hero Header ────────────────────────────────────────────
-          SliverToBoxAdapter(
-            child: Stack(
-              children: [
-                // Gradient background
-                Container(
-                  height: 200,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF5B6AF0), Color(0xFF8B7FF5)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                ),
-                // Back button
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // Title overlay
-                Positioned(
-                  bottom: 20,
-                  left: horizontalPadding,
-                  right: horizontalPadding,
-                  child: Text(
-                    metier.nom,
-                    style: const TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+      appBar: AppBar(title: const Text('Fiche métier')),
+      body: FutureBuilder<MetierFiche>(
+        future: _ficheFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          // ── Body ──────────────────────────────────────────────────
-          SliverPadding(
-            padding: EdgeInsets.fromLTRB(horizontalPadding, 20, horizontalPadding, 40),
-            sliver: SliverList.list(
-              children: [
-                MetierHeader(metier: metier),
-                const SizedBox(height: 16),
-                SalaireCard(salaire: metier.salaireMoyen),
-                const SizedBox(height: 14),
-                BulletListSection(
-                  title: 'Compétences requises',
-                  items: metier.competencesRequises,
-                  icon: Icons.workspace_premium_outlined,
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('Erreur: ${snapshot.error}'),
+              ),
+            );
+          }
+
+          final fiche = snapshot.data;
+          if (fiche == null) {
+            return const Center(child: Text('Fiche introuvable'));
+          }
+
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              Text(fiche.nom, style: Theme.of(context).textTheme.headlineSmall),
+              const SizedBox(height: 16),
+              _sectionCard(
+                context,
+                title: 'Description',
+                child: Text(fiche.description),
+              ),
+              _sectionCard(
+                context,
+                title: 'Salaire',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Min: ${fiche.salaire.min.toStringAsFixed(0)} ${fiche.salaire.devise}'),
+                    Text('Moyen: ${fiche.salaire.moyen.toStringAsFixed(0)} ${fiche.salaire.devise}'),
+                    Text('Max: ${fiche.salaire.max.toStringAsFixed(0)} ${fiche.salaire.devise}'),
+                  ],
                 ),
-                const SizedBox(height: 14),
-                BulletListSection(
-                  title: 'Parcours d\'étude',
-                  items: [...metier.filieresEtudes, 'Durée estimée : ${metier.dureeEtudes}'],
-                  icon: Icons.menu_book_outlined,
+              ),
+              _sectionCard(
+                context,
+                title: 'Durée estimée',
+                child: Text(fiche.dureeEstimee),
+              ),
+              _sectionCard(
+                context,
+                title: 'Compétences',
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: fiche.competences
+                      .map((competence) => Chip(label: Text(competence)))
+                      .toList(),
                 ),
-                const SizedBox(height: 14),
-                BulletListSection(
-                  title: 'Écoles recommandées',
-                  items: metier.ecolesRecommandees,
-                  icon: Icons.account_balance_outlined,
+              ),
+              _sectionCard(
+                context,
+                title: 'Parcours d’études',
+                child: Column(
+                  children: fiche.parcoursEtudes
+                      .map((parcours) => ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.school_outlined),
+                            title: Text(parcours),
+                          ))
+                      .toList(),
                 ),
-                const SizedBox(height: 14),
-                RoadmapSection(roadmap: metier.roadmap),
-              ],
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: AppBottomNavigation(
-        currentIndex: 1,
-        onDestinationSelected: (index) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute<void>(
-              builder: (_) => MainNavigationScreen(initialIndex: index),
-            ),
-            (route) => false,
+              ),
+              _sectionCard(
+                context,
+                title: 'Écoles recommandées',
+                child: Column(
+                  children: fiche.ecolesRecommandees
+                      .map((ecole) => ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.location_city_outlined),
+                            title: Text(ecole.nom),
+                            subtitle: Text(
+                              [ecole.ville, ecole.pays]
+                                  .where((item) => item != null && item!.isNotEmpty)
+                                  .cast<String>()
+                                  .join(', '),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+              _sectionCard(
+                context,
+                title: 'Roadmap',
+                child: Column(
+                  children: fiche.roadmap
+                      .asMap()
+                      .entries
+                      .map(
+                        (entry) => ListTile(
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                          leading: CircleAvatar(
+                            radius: 12,
+                            child: Text('${entry.key + 1}'),
+                          ),
+                          title: Text(entry.value),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
           );
         },
+      ),
+    );
+  }
+
+  Widget _sectionCard(
+    BuildContext context, {
+    required String title,
+    required Widget child,
+  }) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            child,
+          ],
+        ),
       ),
     );
   }

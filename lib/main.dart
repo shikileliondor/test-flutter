@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'app_theme.dart';
-import 'screens/main_navigation_screen.dart';
+
+import 'screens/metiers_list_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-  ));
-  runApp(const ParcoursApp());
+  runApp(const MetiersApp());
 }
 
-class ParcoursApp extends StatelessWidget {
-  const ParcoursApp({super.key});
+class MetiersApp extends StatelessWidget {
+  const MetiersApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Parcours',
+      title: 'Métiers',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
-      home: const MainNavigationScreen(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
+      ),
+      home: const MetiersListScreen(),
     );
   }
 }
