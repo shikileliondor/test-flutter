@@ -9,7 +9,6 @@ import '../app_theme.dart';
 import '../models/ecole_model.dart';
 import '../services/ecole_service.dart';
 import '../widgets/ecole_card.dart';
-import '../widgets/ecole_filter_chips.dart';
 import '../widgets/ecole_search_bar.dart';
 import 'ecole_detail_screen.dart';
 
@@ -24,14 +23,6 @@ class _EcolesScreenState extends State<EcolesScreen> {
   final TextEditingController _searchController = TextEditingController();
   final EcoleService _ecoleService = EcoleService();
   late Future<List<EcoleModel>> _ecolesFuture;
-
-  String? _selectedVille;
-  String? _selectedDomaine;
-  String? _selectedType;
-
-  static const _villes    = ['Abidjan', 'Bouaké', 'Yamoussoukro'];
-  static const _domaines  = ['Technologie', 'Ingénierie', 'Santé', 'Business', 'Créatif'];
-  static const _types     = ['Université', 'Grande école', 'Institut'];
 
   @override
   void initState() {
@@ -48,9 +39,6 @@ class _EcolesScreenState extends State<EcolesScreen> {
   Future<List<EcoleModel>> _loadEcoles() {
     return _ecoleService.fetchEcoles(
       search:  _searchController.text,
-      ville:   _selectedVille,
-      domaine: _selectedDomaine,
-      type:    _selectedType,
     );
   }
 
@@ -109,29 +97,6 @@ class _EcolesScreenState extends State<EcolesScreen> {
                   EcoleSearchBar(
                     controller: _searchController,
                     onChanged: (_) => _refresh(),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ── Filters ─────────────────────────────────────
-                  EcoleFilterChips(
-                    label: 'Ville',
-                    options: _villes,
-                    selectedValue: _selectedVille,
-                    onSelected: (v) { _selectedVille = v; _refresh(); },
-                  ),
-                  const SizedBox(height: 10),
-                  EcoleFilterChips(
-                    label: 'Domaine',
-                    options: _domaines,
-                    selectedValue: _selectedDomaine,
-                    onSelected: (v) { _selectedDomaine = v; _refresh(); },
-                  ),
-                  const SizedBox(height: 10),
-                  EcoleFilterChips(
-                    label: "Type d'établissement",
-                    options: _types,
-                    selectedValue: _selectedType,
-                    onSelected: (v) { _selectedType = v; _refresh(); },
                   ),
                   const SizedBox(height: 22),
 
