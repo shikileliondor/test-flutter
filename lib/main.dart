@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_theme.dart';
-import 'screens/main_navigation_screen.dart';
+import 'routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,8 @@ class ParcoursApp extends StatelessWidget {
       title: 'Parcours',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      home: const MainNavigationScreen(),
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.routes,
     );
   }
 }
