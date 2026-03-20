@@ -22,6 +22,12 @@ class RoadmapMetier {
               .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'diplome_requis': diplomeRequis,
+        'competences_a_apprendre': competencesAApprendre,
+        'experiences_recommandees': experiencesRecommandees,
+      };
 }
 
 class SalaireMetier {
@@ -42,6 +48,12 @@ class SalaireMetier {
       maximum: (json['maximum'] as num? ?? json['moyen'] as num? ?? 0).toInt(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'minimum': minimum,
+        'moyen': moyen,
+        'maximum': maximum,
+      };
 }
 
 class Metier {
@@ -103,10 +115,9 @@ class Metier {
           (json['competences_requises'] as List<dynamic>? ?? const <dynamic>[])
               .map((item) => item.toString())
               .toList(),
-      filieresEtudes:
-          (json['filieres_etudes'] as List<dynamic>? ?? const <dynamic>[])
-              .map((item) => item.toString())
-              .toList(),
+      filieresEtudes: (json['filieres_etudes'] as List<dynamic>? ?? const <dynamic>[])
+          .map((item) => item.toString())
+          .toList(),
       dureeEtudes: (json['duree_etudes'] ?? '').toString(),
       ecolesRecommandees:
           (json['ecoles_recommandees'] as List<dynamic>? ?? const <dynamic>[])
@@ -122,6 +133,23 @@ class Metier {
       updatedAt: _parseDate(json['updated_at']),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'description': description,
+        'salaire_moyen': salaireMoyen.toJson(),
+        'competences_requises': competencesRequises,
+        'filieres_etudes': filieresEtudes,
+        'duree_etudes': dureeEtudes,
+        'ecoles_recommandees': ecolesRecommandees,
+        'icone': icone,
+        'roadmap': roadmap.toJson(),
+        'domaine': domaine,
+        'niveau_requis': niveauRequis,
+        'created_at': createdAt?.toIso8601String(),
+        'updated_at': updatedAt?.toIso8601String(),
+      };
 
   static DateTime? _parseDate(dynamic rawDate) {
     final value = rawDate?.toString();

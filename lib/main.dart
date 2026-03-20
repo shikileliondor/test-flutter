@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'app_theme.dart';
 import 'routes.dart';
 
@@ -9,7 +11,7 @@ void main() {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
-  runApp(const ParcoursApp());
+  runApp(const ProviderScope(child: ParcoursApp()));
 }
 
 class ParcoursApp extends StatelessWidget {

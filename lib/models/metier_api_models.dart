@@ -16,6 +16,12 @@ class MetierResume {
       description: (json['description'] ?? '').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'description': description,
+      };
 }
 
 class MetierDetail {
@@ -46,36 +52,35 @@ class MetierDetail {
       id: (json['id'] as num? ?? 0).toInt(),
       nom: (json['nom'] ?? '').toString(),
       description: (json['description'] ?? '').toString(),
-      salaires: _readList(json, ['salaires'])
-          .map((item) => Salaire.fromJson(item))
-          .toList(),
+      salaires: _readList(json, ['salaires']).map((item) => Salaire.fromJson(item)).toList(),
       dureeEstimee: (json['duree_estimee'] ?? '').toString(),
-      competences: _readList(json, ['competences'])
-          .map((item) => Competence.fromJson(item))
-          .toList(),
-      parcoursEtudes: _readList(json, ['parcours_etudes'])
-          .map((item) => ParcoursEtude.fromJson(item))
-          .toList(),
-      ecolesRecommandees: _readList(json, ['ecoles_recommandees', 'ecoles'])
-          .map((item) => Ecole.fromJson(item))
-          .toList(),
-      roadmapEtapes: _readList(json, ['roadmap_etapes'])
-          .map((item) => RoadmapEtape.fromJson(item))
-          .toList(),
+      competences: _readList(json, ['competences']).map((item) => Competence.fromJson(item)).toList(),
+      parcoursEtudes:
+          _readList(json, ['parcours_etudes']).map((item) => ParcoursEtude.fromJson(item)).toList(),
+      ecolesRecommandees:
+          _readList(json, ['ecoles_recommandees', 'ecoles']).map((item) => Ecole.fromJson(item)).toList(),
+      roadmapEtapes:
+          _readList(json, ['roadmap_etapes']).map((item) => RoadmapEtape.fromJson(item)).toList(),
     );
   }
 
-  static List<Map<String, dynamic>> _readList(
-    Map<String, dynamic> json,
-    List<String> keys,
-  ) {
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'description': description,
+        'salaires': salaires.map((item) => item.toJson()).toList(),
+        'duree_estimee': dureeEstimee,
+        'competences': competences.map((item) => item.toJson()).toList(),
+        'parcours_etudes': parcoursEtudes.map((item) => item.toJson()).toList(),
+        'ecoles_recommandees': ecolesRecommandees.map((item) => item.toJson()).toList(),
+        'roadmap_etapes': roadmapEtapes.map((item) => item.toJson()).toList(),
+      };
+
+  static List<Map<String, dynamic>> _readList(Map<String, dynamic> json, List<String> keys) {
     for (final key in keys) {
       final rawValue = json[key];
       if (rawValue is List) {
-        return rawValue
-            .whereType<Map>()
-            .map((item) => Map<String, dynamic>.from(item))
-            .toList();
+        return rawValue.whereType<Map>().map((item) => Map<String, dynamic>.from(item)).toList();
       }
     }
     return const [];
@@ -109,6 +114,14 @@ class Salaire {
       periode: (json['periode'] ?? 'mois').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'min': min,
+        'moyen': moyen,
+        'max': max,
+        'devise': devise,
+        'periode': periode,
+      };
 }
 
 class Competence {
@@ -129,6 +142,12 @@ class Competence {
       description: (json['description'] ?? '').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'description': description,
+      };
 }
 
 class ParcoursEtude {
@@ -149,6 +168,12 @@ class ParcoursEtude {
       description: (json['description'] ?? '').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'description': description,
+      };
 }
 
 class Ecole {
@@ -169,6 +194,12 @@ class Ecole {
       localisation: (json['localisation'] ?? '').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'localisation': localisation,
+      };
 }
 
 class RoadmapEtape {
@@ -192,4 +223,11 @@ class RoadmapEtape {
       ordre: (json['ordre'] as num? ?? 0).toInt(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'titre': titre,
+        'description': description,
+        'ordre': ordre,
+      };
 }

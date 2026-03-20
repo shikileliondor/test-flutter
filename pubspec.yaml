@@ -36,8 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.2.2
   dio: ^5.9.0
+  flutter_riverpod: ^2.6.1
 
 dev_dependencies:
+  mocktail: ^1.0.4
   flutter_test:
     sdk: flutter
 
