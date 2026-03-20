@@ -29,6 +29,16 @@ class EcoleModel {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nom': nom,
+        'ville': ville,
+        'type': type,
+        'domaines': domaines,
+        'filieres': filieres,
+        'logo_url': logoUrl,
+      };
+
   static List<String> _toStringList(dynamic source) {
     if (source is List) {
       return source.map((item) => item.toString()).toList();
