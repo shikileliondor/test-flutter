@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Données invalides",
+    "details": {
+      "nom": ["Le champ nom est requis."]
+    }
+  }
+}
