@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'app_theme.dart';
-import 'routes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'src/app/app_router.dart';
+import 'src/app/app_theme.dart';
+import 'src/core/l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-  ));
-  runApp(const ParcoursApp());
+  runApp(const ProviderScope(child: ParcoursApp()));
 }
 
-class ParcoursApp extends StatelessWidget {
+class ParcoursApp extends ConsumerWidget {
   const ParcoursApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Parcours',
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    return MaterialApp.router(
+      title: 'Parcours API',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
-      initialRoute: AppRoutes.home,
-      routes: AppRoutes.routes,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      routerConfig: router,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('fr')],
+      locale: const Locale('fr'),
     );
   }
 }
