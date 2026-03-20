@@ -1,18 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class ApiResponse<T> {
+  const ApiResponse({
+    required this.data,
+    this.message,
+    this.meta,
+  });
 
-part 'api_response.freezed.dart';
-part 'api_response.g.dart';
-
-@freezed
-class ApiResponse<T> with _$ApiResponse<T> {
-  const factory ApiResponse({
-    required T data,
-    String? message,
-    Map<String, dynamic>? meta,
-  }) = _ApiResponse<T>;
-
-  factory ApiResponse.fromJson(
-    Map<String, dynamic> json,
-    T Function(Object? json) fromJsonT,
-  ) => _$ApiResponseFromJson(json, fromJsonT);
+  final T data;
+  final String? message;
+  final Map<String, dynamic>? meta;
 }
