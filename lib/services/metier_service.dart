@@ -79,8 +79,27 @@ class MetierService {
       throw Exception('Erreur API: ${response.statusCode}');
     }
 
-    final payload = jsonDecode(response.body) as Map<String, dynamic>;
-    return Metier.fromJson(payload['data'] as Map<String, dynamic>? ?? payload);
+    final payload = jsonDecode(response.body);
+
+    if (payload is Map<String, dynamic>) {
+      final data = payload['data'];
+
+      if (data is Map<String, dynamic>) {
+        return Metier.fromJson(data);
+      }
+
+      if (data is List && data.isNotEmpty && data.first is Map<String, dynamic>) {
+        return Metier.fromJson(data.first as Map<String, dynamic>);
+      }
+
+      return Metier.fromJson(payload);
+    }
+
+    if (payload is List && payload.isNotEmpty && payload.first is Map<String, dynamic>) {
+      return Metier.fromJson(payload.first as Map<String, dynamic>);
+    }
+
+    throw Exception('Format de réponse invalide pour le détail métier');
   }
 
   List<Metier> _filterMockData({
